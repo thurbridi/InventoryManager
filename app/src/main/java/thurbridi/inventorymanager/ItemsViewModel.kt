@@ -9,7 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class ItemViewModel(application: Application): AndroidViewModel(application) {
+class ItemsViewModel(application: Application): AndroidViewModel(application) {
     private val parentJob = Job()
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main

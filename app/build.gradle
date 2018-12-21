@@ -10,6 +10,11 @@ android {
     dataBinding {
         enabled = true
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "thurbridi.inventorymanager"

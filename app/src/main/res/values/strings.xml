@@ -2,12 +2,15 @@
     <string name="app_name">Inventory Manager</string>
     <string name="title_activity_main">Inventory Manager</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="new_item_title">Insert new item</string>
     <string name="hint_name">Item name</string>
     <string name="hint_amount">Item amount</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="empty_not_saved">Item was not saved</string>
+    <string name="title_activity_update_item">UpdateItemActivity</string>
+    <string name="update_item_title">Update item</string>
+    <string name="hint_amount_changed"></string>
+    <string name="not_updated">Item was not updated</string>
+    <string name="updated">Item successfully updated</string>>
 </resources>

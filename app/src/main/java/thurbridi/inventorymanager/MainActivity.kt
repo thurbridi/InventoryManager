@@ -5,21 +5,16 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.content_main.view.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var itemViewModel: ItemViewModel
+    private lateinit var itemsViewModel: ItemsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +22,17 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = ItemListAdapter(this) {itemViewModel.delete(it)}
+        val adapter = ItemsListAdapter(this, {itemsViewModel.delete(it)}, {
+            val intent = Intent(this@MainActivity, UpdateItemActivity::class.java).apply {
+                putExtra("item", it)
+            }
+            startActivityForResult(intent, updateItemActivityRequestCode)
+        })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        itemViewModel = ViewModelProviders.of(this).get(ItemViewModel::class.java)
 
-        itemViewModel.items.observe(this, Observer { items ->
+        itemsViewModel = ViewModelProviders.of(this).get(ItemsViewModel::class.java)
+        itemsViewModel.items.observe(this, Observer { items ->
             items?.let { adapter.setItems(it) }
         })
 
@@ -45,21 +45,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == insertItemActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                val item = Item(
-                    0,
-                    it.getStringExtra(InsertItemActivity.EXTRA_NAME),
-                    it.getStringExtra(InsertItemActivity.EXTRA_AMOUNT).toInt()
-                )
-                itemViewModel.insert(item)
+        when (requestCode) {
+            insertItemActivityRequestCode -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    data?.let {
+                        val item = Item(
+                            0,
+                            it.getStringExtra(InsertItemActivity.EXTRA_NAME),
+                            it.getStringExtra(InsertItemActivity.EXTRA_AMOUNT).toInt()
+                        )
+                        itemsViewModel.insert(item)
+                    }
+                } else {
+                    Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()
+                }
             }
-        } else {
-            Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()
+
+            updateItemActivityRequestCode -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(applicationContext, R.string.updated, Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(applicationContext, R.string.not_updated, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 
     companion object {
         const val insertItemActivityRequestCode = 1
+        const val updateItemActivityRequestCode = 2
     }
 }

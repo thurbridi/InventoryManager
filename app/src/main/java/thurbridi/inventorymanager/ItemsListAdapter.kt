@@ -1,6 +1,7 @@
 package thurbridi.inventorymanager
 
 import android.content.Context
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,18 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.item_card.view.*
 
 
-class ItemListAdapter internal constructor(context: Context, private val onClick: (Item) -> Unit): RecyclerView.Adapter<ItemListAdapter.ItemViewHolder>(){
+class ItemsListAdapter internal constructor(
+    context: Context,
+    private val onClickRemove: (Item) -> Unit,
+    private val onClickUpdate: (Item) -> Unit
+    ): RecyclerView.Adapter<ItemsListAdapter.ItemViewHolder>(){
+
+
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var items = emptyList<Item>()
 
     inner class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        val cardItemView: CardView = itemView.card_view
         val nameItemView: TextView = itemView.textView_name
         val amountItemView: TextView = itemView.textView_amount
         val moreItemView: ImageButton = itemView.button_more
@@ -29,10 +37,13 @@ class ItemListAdapter internal constructor(context: Context, private val onClick
         val item = items[position]
 
         with(item) {
+            holder.cardItemView.setOnClickListener { 
+                onClickUpdate(items[position])
+            }
             holder.nameItemView.text = name
             holder.amountItemView.text = amount.toString()
             holder.moreItemView.setOnClickListener {
-                onClick(items[position])
+                onClickRemove(items[position])
             }
         }
 

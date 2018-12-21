@@ -23,7 +23,11 @@
                 android:name=".InsertItemActivity"
                 android:label="Insert new item"
                 android:theme="@style/AppTheme.NoActionBar">
-
+        </activity>
+        <activity
+                android:name=".UpdateItemActivity"
+                android:label="@string/title_activity_update_item"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
