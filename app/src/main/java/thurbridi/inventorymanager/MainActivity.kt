@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
         })
 
         fab.setOnClickListener { view ->
-            val intent = Intent(this@MainActivity, InsertItemActivity::class.java)
+            val intent = Intent(this@MainActivity, UpdateItemActivity::class.java).apply {
+                putExtra("item", Item(0, "", 0))
+            }
             startActivityForResult(intent, insertItemActivityRequestCode)
         }
     }
@@ -48,14 +50,7 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             insertItemActivityRequestCode -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    data?.let {
-                        val item = Item(
-                            0,
-                            it.getStringExtra(InsertItemActivity.EXTRA_NAME),
-                            it.getStringExtra(InsertItemActivity.EXTRA_AMOUNT).toInt()
-                        )
-                        itemsViewModel.insert(item)
-                    }
+                    Toast.makeText(applicationContext, R.string.saved, Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(applicationContext, R.string.empty_not_saved, Toast.LENGTH_LONG).show()
                 }

@@ -12,5 +12,6 @@
     <string name="update_item_title">Update item</string>
     <string name="hint_amount_changed"></string>
     <string name="not_updated">Item was not updated</string>
-    <string name="updated">Item successfully updated</string>>
+    <string name="updated">Item successfully updated</string>
+    <string name="saved">Item saved</string>>
 </resources>

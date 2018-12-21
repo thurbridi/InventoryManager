@@ -1,7 +1,6 @@
 package thurbridi.inventorymanager
 
 import android.app.Activity
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -9,15 +8,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class UpdateItemActivity : AppCompatActivity() {
     private lateinit var itemsViewModel: ItemsViewModel
@@ -25,6 +20,13 @@ class UpdateItemActivity : AppCompatActivity() {
     private lateinit var editNameView: EditText
     private lateinit var editAmountView: EditText
     private lateinit var amountChangedView: TextView
+    private lateinit var titleView: TextView
+
+    private lateinit var buttonSave: Button
+    private lateinit var buttonCancel: Button
+    private lateinit var buttonAdd: ImageButton
+    private lateinit var buttonRemove: ImageButton
+    private lateinit var buttonMore: ImageButton
 
     private lateinit var item: Item
 
@@ -37,40 +39,48 @@ class UpdateItemActivity : AppCompatActivity() {
         editNameView = findViewById(R.id.editName)
         editAmountView = findViewById(R.id.editAmount)
         amountChangedView = findViewById(R.id.amount_update)
+        titleView = findViewById(R.id.title)
+
+        buttonSave = findViewById(R.id.button_save)
+        buttonCancel = findViewById(R.id.button_cancel)
+        buttonAdd = findViewById(R.id.button_add)
+        buttonRemove = findViewById(R.id.button_remove)
+        buttonMore = findViewById(R.id.button_more)
 
         item = intent.getParcelableExtra<Item>("item")
 
-        editNameView.setText(item.name)
-        editAmountView.setText("${item.amount}")
+        if (item.id == 0) {
+            titleView.setText(R.string.new_item_title)
+            amountChangedView.visibility = View.INVISIBLE
+            buttonMore.visibility = View.GONE
+        } else {
+            editNameView.setText(item.name)
+            editAmountView.setText("${item.amount}")
 
+            val currentAmount = item.amount
 
-        val current_amount = item.amount
-        var new_amount = current_amount
+            editAmountView.addTextChangedListener(object: TextWatcher {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val newAmount = if (TextUtils.isEmpty(editAmountView.text)) {
+                        0
+                    } else {
+                        editAmountView.text.toString().toInt()
+                    }
 
-        val buttonSave = findViewById<Button>(R.id.button_save)
-        val buttonCancel = findViewById<Button>(R.id.button_cancel)
-        val buttonAdd = findViewById<ImageButton>(R.id.button_add)
-        val buttonRemove = findViewById<ImageButton>(R.id.button_remove)
-
-        editAmountView.addTextChangedListener(object: TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                new_amount = if (TextUtils.isEmpty(editAmountView.text)) {
-                    0
-                } else {
-                    editAmountView.text.toString().toInt()
+                    val change = newAmount - currentAmount
+//                TODO("Use resource string with placeholders")
+                    if (change > 0) {
+                        amountChangedView.setText("${currentAmount}(+${change})")
+                    } else {
+                        amountChangedView.setText("${currentAmount}(${change})")
+                    }
                 }
 
-                val change = new_amount - current_amount
-                if (change > 0) {
-                    amountChangedView.setText("${current_amount}(+${change})")
-                } else {
-                    amountChangedView.setText("${current_amount}(${change})")
-                }
-            }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
-        })
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
 
         buttonSave.setOnClickListener {
             val replyIntent = Intent()
@@ -79,7 +89,9 @@ class UpdateItemActivity : AppCompatActivity() {
             } else {
                 this.item.name = editNameView.text.toString()
                 this.item.amount = editAmountView.text.toString().toInt()
+
                 itemsViewModel.insert(item)
+
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             finish()
