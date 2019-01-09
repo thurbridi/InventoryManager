@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,7 +39,8 @@ class MainActivity : AppCompatActivity() {
             items?.let { adapter.setItems(it) }
         })
 
-        fab.setOnClickListener { view ->
+
+        fab.setOnClickListener { _ ->
             val intent = Intent(this@MainActivity, UpdateItemActivity::class.java).apply {
                 putExtra("item", Item(0, "", 0))
             }
@@ -69,5 +73,22 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val insertItemActivityRequestCode = 1
         const val updateItemActivityRequestCode = 2
+        const val scannerActivityRequestCode = 3
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+        R.id.action_qrscan -> {
+            val intent = Intent(this@MainActivity, ScannerActivity::class.java)
+            startActivityForResult(intent, scannerActivityRequestCode)
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
+    }
+
 }

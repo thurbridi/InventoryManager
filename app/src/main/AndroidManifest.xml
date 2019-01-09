@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="thurbridi.inventorymanager">
+          xmlns:tools="http://schemas.android.com/tools" package="thurbridi.inventorymanager">
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
             android:allowBackup="true"
@@ -8,7 +11,8 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:name=".MainActivity"
                 android:label="@string/title_activity_main"
@@ -20,15 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".InsertItemActivity"
-                android:label="Insert new item"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
                 android:name=".UpdateItemActivity"
                 android:label="@string/title_activity_update_item"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".ScannerActivity">
+        </activity>
     </application>
-
 </manifest>

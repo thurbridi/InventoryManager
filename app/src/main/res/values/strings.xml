@@ -14,5 +14,6 @@
     <string name="not_updated">Item was not updated</string>
     <string name="updated">Item successfully updated</string>
     <string name="saved">Item saved</string>
-    <string name="delete">Delete</string>>
+    <string name="delete">Delete</string>
+    <string name="action_qrscan">Scan QR Code</string>>
 </resources>
