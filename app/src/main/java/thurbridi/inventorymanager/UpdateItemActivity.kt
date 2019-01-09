@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 
 class UpdateItemActivity : AppCompatActivity() {
     private lateinit var itemsViewModel: ItemsViewModel
@@ -80,6 +78,29 @@ class UpdateItemActivity : AppCompatActivity() {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
+        }
+
+        buttonMore.setOnClickListener {
+            val popup = PopupMenu(this, buttonMore)
+            val inflater = popup.menuInflater
+
+            popup.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.delete -> {
+                        val replyIntent = Intent()
+
+                        itemsViewModel.delete(item)
+                        setResult(Activity.RESULT_OK, replyIntent)
+                        finish()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+
+            inflater.inflate(R.menu.item_menu, popup.menu)
+            popup.show()
         }
 
         buttonSave.setOnClickListener {

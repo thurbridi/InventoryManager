@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.item_card.view.*
 
 class ItemsListAdapter internal constructor(
     context: Context,
-    private val onClickRemove: (Item) -> Unit,
     private val onClickUpdate: (Item) -> Unit
     ): RecyclerView.Adapter<ItemsListAdapter.ItemViewHolder>(){
 
@@ -25,7 +24,6 @@ class ItemsListAdapter internal constructor(
         val cardItemView: CardView = itemView.card_view
         val nameItemView: TextView = itemView.textView_name
         val amountItemView: TextView = itemView.textView_amount
-        val moreItemView: ImageButton = itemView.button_more
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -42,9 +40,6 @@ class ItemsListAdapter internal constructor(
             }
             holder.nameItemView.text = name
             holder.amountItemView.text = amount.toString()
-            holder.moreItemView.setOnClickListener {
-                onClickRemove(items[position])
-            }
         }
 
     }

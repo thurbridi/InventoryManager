@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = ItemsListAdapter(this, {itemsViewModel.delete(it)}, {
+        val adapter = ItemsListAdapter(this) {
             val intent = Intent(this@MainActivity, UpdateItemActivity::class.java).apply {
                 putExtra("item", it)
             }
             startActivityForResult(intent, updateItemActivityRequestCode)
-        })
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
