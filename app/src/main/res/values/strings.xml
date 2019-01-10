@@ -1,19 +1,21 @@
 <resources>
     <string name="app_name">Inventory Manager</string>
     <string name="title_activity_main">Inventory Manager</string>
+    <string name="title_activity_insert_item">Insert Item</string>
+    <string name="title_activity_update_item">Update Item</string>
 
-    <string name="new_item_title">Insert new item</string>
     <string name="hint_name">Item name</string>
     <string name="hint_amount">Item amount</string>
+    <string name="hint_amount_changed"></string>
+
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="empty_not_saved">Item was not saved</string>
-    <string name="title_activity_update_item">UpdateItemActivity</string>
-    <string name="update_item_title">Update item</string>
-    <string name="hint_amount_changed"></string>
-    <string name="not_updated">Item was not updated</string>
-    <string name="updated">Item successfully updated</string>
-    <string name="saved">Item saved</string>
     <string name="delete">Delete</string>
-    <string name="action_qrscan">Scan QR Code</string>>
+
+    <string name="updated">Item successfully updated</string>
+    <string name="not_updated">Item was not updated</string>
+    <string name="empty_not_saved">Item was not saved</string>
+
+    <string name="saved">Item saved</string>
+    <string name="action_qrscan">Scan QR Code</string>
 </resources>

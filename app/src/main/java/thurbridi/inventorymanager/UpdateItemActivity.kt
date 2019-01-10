@@ -8,9 +8,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_update_item.*
+import thurbridi.inventorymanager.R.string.title_activity_insert_item
 
 class UpdateItemActivity : AppCompatActivity() {
     private lateinit var itemsViewModel: ItemsViewModel
@@ -18,40 +21,38 @@ class UpdateItemActivity : AppCompatActivity() {
     private lateinit var editNameView: EditText
     private lateinit var editAmountView: EditText
     private lateinit var amountChangedView: TextView
-    private lateinit var titleView: TextView
 
     private lateinit var buttonSave: Button
     private lateinit var buttonCancel: Button
     private lateinit var buttonAdd: ImageButton
     private lateinit var buttonRemove: ImageButton
-    private lateinit var buttonMore: ImageButton
 
     private lateinit var item: Item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_item)
+        setSupportActionBar(toolbar)
+
 
         itemsViewModel = ViewModelProviders.of(this).get(ItemsViewModel::class.java)
 
         editNameView = findViewById(R.id.editName)
         editAmountView = findViewById(R.id.editAmount)
         amountChangedView = findViewById(R.id.amount_update)
-        titleView = findViewById(R.id.title)
 
         buttonSave = findViewById(R.id.button_save)
         buttonCancel = findViewById(R.id.button_cancel)
         buttonAdd = findViewById(R.id.button_add)
         buttonRemove = findViewById(R.id.button_remove)
-        buttonMore = findViewById(R.id.button_more)
 
         item = intent.getParcelableExtra<Item>("item")
 
         if (item.id == 0) {
-            titleView.setText(R.string.new_item_title)
+            this.supportActionBar?.setTitle(R.string.title_activity_insert_item)
             amountChangedView.visibility = View.INVISIBLE
-            buttonMore.visibility = View.GONE
         } else {
+            this.supportActionBar?.setTitle(R.string.title_activity_update_item)
             editNameView.setText(item.name)
             editAmountView.setText("${item.amount}")
 
@@ -68,9 +69,9 @@ class UpdateItemActivity : AppCompatActivity() {
                     val change = newAmount - currentAmount
 //                TODO("Use resource string with placeholders")
                     if (change > 0) {
-                        amountChangedView.setText("${currentAmount}(+${change})")
+                        amountChangedView.setText("${currentAmount} (+${change})")
                     } else {
-                        amountChangedView.setText("${currentAmount}(${change})")
+                        amountChangedView.setText("${currentAmount} (${change})")
                     }
                 }
 
@@ -78,29 +79,6 @@ class UpdateItemActivity : AppCompatActivity() {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
-        }
-
-        buttonMore.setOnClickListener {
-            val popup = PopupMenu(this, buttonMore)
-            val inflater = popup.menuInflater
-
-            popup.setOnMenuItemClickListener {
-                when(it.itemId) {
-                    R.id.delete -> {
-                        val replyIntent = Intent()
-
-                        itemsViewModel.delete(item)
-                        setResult(Activity.RESULT_OK, replyIntent)
-                        finish()
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-
-            inflater.inflate(R.menu.item_menu, popup.menu)
-            popup.show()
         }
 
         buttonSave.setOnClickListener {
@@ -143,4 +121,29 @@ class UpdateItemActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (this.item.id != 0) {
+            menuInflater.inflate(R.menu.item_menu, menu)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+        R.id.delete -> {
+            delete()
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    fun delete() {
+        val replyIntent = Intent()
+
+        itemsViewModel.delete(this.item)
+        setResult(Activity.RESULT_OK, replyIntent)
+        finish()
+    }
 }
+
